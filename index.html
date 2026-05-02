@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GAMBAZ — Haz el gamba, no la guerra</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --orange: #F27507;
+      --dark-orange: #A62F03;
+      --navy: #060B26;
+      --green-dark: #1A7339;
+      --green-light: #94A60F;
+      --cream: #FFF5E0;
+      --white: #ffffff;
+    }
+ 
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+ 
+    html { scroll-behavior: smooth; }
+ 
+    body {
+      background-color: var(--navy);
+      color: var(--cream);
+      font-family: 'Barlow', sans-serif;
+      overflow-x: hidden;
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctext y='28' font-size='28'%3E%F0%9F%A6%90%3C/text%3E%3C/svg%3E"), auto;
+    }
+ 
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+ 
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 3rem;
+      background: rgba(6,11,38,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 2px solid var(--orange);
+    }
+    .nav-logo {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 1rem;
+      color: var(--orange);
+      text-shadow: 2px 2px 0 var(--dark-orange);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--cream);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--orange); }
+ 
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 6rem 2rem 4rem;
+      text-align: center;
+      background: radial-gradient(ellipse at 50% 60%, #3a1000 0%, var(--navy) 70%);
+    }
+ 
+    /* fire bg animation */
+    .fire-bg {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(242,117,7,0.04) 2px,
+        rgba(242,117,7,0.04) 4px
+      );
+      animation: scanlines 8s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes scanlines {
+      from { background-position: 0 0; }
+      to { background-position: 0 100px; }
+    }
+
+    /* ─── HERO PLACEHOLDER IMAGE ─── */
+    .hero-placeholder {
+      width: 180px;
+      height: 180px;
+      margin-bottom: 2rem;
+      position: relative;
+      animation: fadeUp 0.5s ease both;
+    }
+    .hero-placeholder svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 30px rgba(242,117,7,0.5));
+    }
+ 
+    .hero-tagline {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      color: var(--green-light);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s ease both;
+    }
+ 
+    .hero-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(2.5rem, 8vw, 6rem);
+      line-height: 1.1;
+      color: var(--orange);
+      text-shadow:
+        4px 4px 0 var(--dark-orange),
+        8px 8px 0 rgba(166,47,3,0.3),
+        0 0 60px rgba(242,117,7,0.5);
+      margin-bottom: 0.5rem;
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+ 
+    .hero-sub {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      letter-spacing: 0.2em;
+      color: var(--green-light);
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+ 
+    .hero-desc {
+      max-width: 640px;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: rgba(255,245,224,0.85);
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.7s 0.3s ease both;
+    }
+ 
+    .hero-badges {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 3rem;
+      animation: fadeUp 0.7s 0.4s ease both;
+    }
+    .badge {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border: 2px solid var(--orange);
+      color: var(--orange);
+      background: rgba(242,117,7,0.08);
+    }
+ 
+    .hero-ctas {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.7s 0.5s ease both;
+    }
+ 
+    .btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.7rem;
+      padding: 1rem 1.8rem;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .btn:hover { transform: translateY(-3px); }
+    .btn:active { transform: translateY(0); }
+ 
+    .btn-primary {
+      background: var(--orange);
+      color: var(--navy);
+      box-shadow: 4px 4px 0 var(--dark-orange);
+    }
+    .btn-primary:hover { box-shadow: 6px 6px 0 var(--dark-orange); }
+ 
+    .btn-secondary {
+      background: transparent;
+      color: var(--cream);
+      box-shadow: 4px 4px 0 var(--green-dark);
+      border: 2px solid var(--green-dark);
+    }
+    .btn-secondary:hover { box-shadow: 6px 6px 0 var(--green-dark); border-color: var(--green-light); }
+ 
+    .scroll-hint {
+      margin-top: 4rem;
+      animation: bounce 2s infinite, fadeUp 1s 1s both;
+      font-size: 1.5rem;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+ 
+    /* ─── SECTIONS ─── */
+    section { padding: 6rem 2rem; }
+ 
+    .container { max-width: 1100px; margin: 0 auto; }
+ 
+    .section-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--green-light);
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(1.2rem, 3vw, 2rem);
+      color: var(--orange);
+      text-shadow: 3px 3px 0 var(--dark-orange);
+      margin-bottom: 3rem;
+      line-height: 1.4;
+    }
+ 
+    /* ─── TRAILER ─── */
+    #trailer {
+      background: var(--navy);
+      border-top: 3px solid var(--orange);
+      border-bottom: 3px solid var(--orange);
+    }
+    .trailer-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border: 3px solid var(--orange);
+      box-shadow: 8px 8px 0 var(--dark-orange), 0 0 60px rgba(242,117,7,0.2);
+    }
+    .trailer-wrapper iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+ 
+    /* ─── FEATURES ─── */
+    #features { background: #080d2a; }
+ 
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.03);
+      border: 2px solid rgba(242,117,7,0.3);
+      padding: 2rem;
+      position: relative;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--orange);
+    }
+    .feature-card:hover {
+      border-color: var(--orange);
+      transform: translateX(4px);
+    }
+
+    /* ─── FEATURE / WEAPON PLACEHOLDER ICONS ─── */
+    .placeholder-icon {
+      width: 56px;
+      height: 56px;
+      margin-bottom: 1rem;
+      display: block;
+      object-fit: contain;
+    }
+    .placeholder-icon svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .feature-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.1em;
+      color: var(--orange);
+      margin-bottom: 0.5rem;
+    }
+    .feature-desc {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: rgba(255,245,224,0.75);
+    }
+ 
+    /* ─── STATS ─── */
+    .stats-bar {
+      background: var(--orange);
+      padding: 2.5rem 2rem;
+    }
+    .stats-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      align-items: center;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-num {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 2.5rem;
+      color: var(--navy);
+      display: block;
+    }
+    .stat-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--navy);
+      opacity: 0.7;
+    }
+ 
+    /* ─── SOBRE NOSOTROS ─── */
+    #arsenal { background: var(--navy); }
+
+    .about-intro {
+      max-width: 780px;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: rgba(255,245,224,0.85);
+      margin-bottom: 3rem;
+    }
+    .about-intro strong {
+      color: var(--orange);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    .about-card {
+      background: rgba(26,115,57,0.08);
+      border: 2px solid var(--green-dark);
+      padding: 1.8rem;
+      transition: background 0.2s, transform 0.2s;
+      position: relative;
+    }
+    .about-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 3px;
+      background: var(--green-light);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+    .about-card:hover {
+      background: rgba(26,115,57,0.18);
+      transform: translateY(-4px);
+    }
+    .about-card:hover::after {
+      transform: scaleX(1);
+    }
+    .about-card-icon {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 1rem;
+    }
+    .about-card-icon svg { width: 100%; height: 100%; }
+    .about-card-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.1em;
+      color: var(--green-light);
+      margin-bottom: 0.5rem;
+    }
+    .about-card-desc {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: rgba(255,245,224,0.75);
+    }
+
+    .about-quote {
+      border-left: 4px solid var(--orange);
+      padding: 1.2rem 1.8rem;
+      background: rgba(242,117,7,0.05);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 0.1em;
+      color: var(--cream);
+      line-height: 1.5;
+      max-width: 700px;
+    }
+    .about-quote span {
+      display: block;
+      margin-top: 0.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--green-light);
+    }
+
+    /* ─── EQUIPO ─── */
+    #equipo { background: #080d2a; }
+ 
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+    }
+    .team-card {
+      text-align: center;
+      padding: 1.5rem;
+      border: 2px solid rgba(242,117,7,0.2);
+      transition: border-color 0.2s;
+    }
+    .team-card:hover { border-color: var(--orange); }
+    .team-avatar {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      border: 3px solid var(--orange);
+      margin: 0 auto 1rem;
+      background: rgba(242,117,7,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .team-avatar svg {
+      width: 52px;
+      height: 52px;
+    }
+    .team-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.05em;
+      color: var(--orange);
+      margin-bottom: 0.3rem;
+    }
+    .team-role {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green-light);
+    }
+ 
+    /* ─── COMENTARIOS ─── */
+    #comentarios { background: var(--navy); }
+ 
+    .comments-form {
+      background: rgba(255,255,255,0.03);
+      border: 2px solid rgba(242,117,7,0.3);
+      padding: 2rem;
+      margin-bottom: 3rem;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--green-light);
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      background: rgba(255,255,255,0.05);
+      border: 2px solid rgba(242,117,7,0.3);
+      color: var(--cream);
+      padding: 0.75rem 1rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      resize: vertical;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { border-color: var(--orange); }
+    .form-group select option { background: var(--navy); }
+    .form-group textarea { min-height: 100px; }
+ 
+    .comments-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .comment-card {
+      background: rgba(255,255,255,0.03);
+      border-left: 4px solid var(--orange);
+      padding: 1.2rem 1.5rem;
+      animation: fadeUp 0.4s ease;
+    }
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .comment-author {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+      color: var(--orange);
+    }
+    .comment-rating { color: var(--green-light); font-size: 1rem; }
+    .comment-text {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: rgba(255,245,224,0.8);
+    }
+    .comment-date {
+      font-size: 0.75rem;
+      color: rgba(255,245,224,0.4);
+      margin-top: 0.4rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+ 
+    /* ─── INSTAGRAM ─── */
+    #social {
+      background: #080d2a;
+      border-top: 3px solid var(--orange);
+    }
+    .social-cards {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .social-card {
+      flex: 1;
+      min-width: 240px;
+      max-width: 360px;
+      background: rgba(255,255,255,0.03);
+      border: 2px solid rgba(242,117,7,0.3);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      text-decoration: none;
+      color: var(--cream);
+      transition: border-color 0.2s, transform 0.2s, background 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    .social-card:hover {
+      border-color: var(--orange);
+      transform: translateY(-4px);
+      background: rgba(242,117,7,0.06);
+    }
+    .social-icon {
+      width: 56px;
+      height: 56px;
+    }
+    .social-icon svg { width: 100%; height: 100%; }
+    .social-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.1em;
+      color: var(--orange);
+    }
+    .social-handle {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.95rem;
+      color: rgba(255,245,224,0.6);
+    }
+    .social-cta {
+      margin-top: 0.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--green-light);
+    }
+ 
+    /* ─── FOOTER ─── */
+    footer {
+      background: #03060f;
+      border-top: 3px solid var(--orange);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+    .footer-logo {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 1.2rem;
+      color: var(--orange);
+      text-shadow: 3px 3px 0 var(--dark-orange);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .footer-studio {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.2em;
+      color: var(--green-light);
+      margin-bottom: 1.5rem;
+    }
+    .footer-links { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem; }
+    .footer-links a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,245,224,0.6);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--orange); }
+    .footer-copy {
+      font-size: 0.8rem;
+      color: rgba(255,245,224,0.3);
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.1em;
+    }
+ 
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+ 
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+ 
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1rem; }
+      .nav-links li:nth-child(n+4) { display: none; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+ 
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--navy); }
+    ::-webkit-scrollbar-thumb { background: var(--orange); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--dark-orange); }
+ 
+    /* ─── SELECTION ─── */
+    ::selection { background: var(--orange); color: var(--navy); }
+  </style>
+</head>
+<body>
+ 
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#hero">GAMBAZ</a>
+  <ul class="nav-links">
+    <li><a href="#trailer">Tráiler</a></li>
+    <li><a href="#features">Gameplay</a></li>
+    <li><a href="#arsenal">Nosotros</a></li>
+    <li><a href="#equipo">Equipo</a></li>
+    <li><a href="#comentarios">Comentarios</a></li>
+    <li><a href="#social">Redes</a></li>
+  </ul>
+</nav>
+ 
+<!-- HERO -->
+<section id="hero">
+  <div class="fire-bg"></div>
+
+  <!-- Placeholder logo/mascot -->
+  <img src="assets/logo.png" class="hero-placeholder" alt="Gambaz" />
+
+  <div class="hero-tagline">Naser Studios presenta</div>
+  <h1 class="hero-title">GAMBAZ</h1>
+  <p class="hero-desc">
+    Nochevieja. Las gambas de la cena mutan y atacan la ciudad. Un niño, unas armas de dudosa calidad y el apocalipsis más absurdo. FPS de acción frenética con estética retro PS2.
+  </p>
+  <div class="hero-badges">
+    <span class="badge">FPS Retro</span>
+    <span class="badge">PC</span>
+    <span class="badge">Estética PS2</span>
+    <span class="badge">Humor absurdo</span>
+  </div>
+  <div class="hero-ctas">
+    <a href="#trailer" class="btn btn-primary">&#9654; Ver Tráiler</a>
+    <a href="https://www.instagram.com/_gambaz_/" target="_blank" rel="noopener" class="btn btn-secondary">&#128247; Instagram</a>
+  </div>
+  <div class="scroll-hint">↓</div>
+</section>
+ 
+<!-- TRAILER -->
+<section id="trailer">
+  <div class="container">
+    <div class="section-label reveal">Tráiler oficial</div>
+    <div class="section-title reveal">El Gambalipsis empieza aquí</div>
+    <div class="trailer-wrapper reveal">
+      <iframe
+        src="https://www.youtube.com/embed/K_7ZtMoNH_o"
+        title="GAMBAZ — Tráiler Oficial"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </div>
+</section>
+ 
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat"><span class="stat-num">5</span><span class="stat-label">Tipos de enemigos</span></div>
+    <div class="stat"><span class="stat-num">4</span><span class="stat-label">Niveles</span></div>
+    <div class="stat"><span class="stat-num">3</span><span class="stat-label">Armas</span></div>
+    <div class="stat"><span class="stat-num">2</span><span class="stat-label">Jefes finales</span></div>
+    <div class="stat"><span class="stat-num">1</span><span class="stat-label">Misión</span></div>
+  </div>
+</div>
+ 
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="section-label reveal">Mecánicas</div>
+    <div class="section-title reveal">¿Por qué Gambaz?</div>
+    <div class="features-grid">
+
+      <div class="feature-card reveal">
+        <span class="placeholder-icon">
+          <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="56" height="56" rx="4" fill="rgba(242,117,7,0.1)"/>
+            <!-- Explosion icon -->
+            <polygon points="28,8 32,22 44,18 36,28 46,36 32,34 30,48 24,36 12,40 20,28 10,20 24,22" fill="none" stroke="#F27507" stroke-width="2" stroke-linejoin="round"/>
+            <circle cx="28" cy="28" r="4" fill="#F27507"/>
+          </svg>
+        </span>
+        <div class="feature-title">Acción frenética</div>
+        <p class="feature-desc">Combate rápido y basado en movilidad. Esquiva, dispara y aprovecha el entorno para sobrevivir a las hordas de gambas zombies.</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <span class="placeholder-icon" style="background: rgba(242,117,7,0.1); display:flex; align-items:center; justify-content:center; padding:8px; border-radius:4px;">
+            <img src="assets/icono.png" alt="Temática absurda" style="width:40px; height:40px; object-fit:contain;" />
+        </span>
+        <div class="feature-title">Temática absurda</div>
+        <p class="feature-desc">Todo es ridículo. Referencias a la cultura española de los 90s y 2000s. Los personajes se lo toman completamente en serio.</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <span class="placeholder-icon">
+          <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="56" height="56" rx="4" fill="rgba(242,117,7,0.1)"/>
+            <!-- Arrow up / upgrade icon -->
+            <polyline points="28,10 28,38" stroke="#F27507" stroke-width="2.5"/>
+            <polyline points="18,22 28,10 38,22" stroke="#F27507" stroke-width="2.5" fill="none"/>
+            <rect x="16" y="42" width="24" height="4" rx="2" fill="#F27507" opacity="0.6"/>
+          </svg>
+        </span>
+        <div class="feature-title">Progresión y mejoras</div>
+        <p class="feature-desc">Recoge cáscaras de los enemigos caídos y úsalas para mejorar tu arsenal en el hub — tu casa.</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <span class="placeholder-icon">
+          <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="56" height="56" rx="4" fill="rgba(242,117,7,0.1)"/>
+            <!-- Controller icon -->
+            <rect x="10" y="20" width="36" height="20" rx="8" fill="none" stroke="#F27507" stroke-width="2"/>
+            <circle cx="36" cy="28" r="2" fill="#F27507"/>
+            <circle cx="41" cy="33" r="2" fill="#F27507"/>
+            <circle cx="36" cy="38" r="2" fill="#F27507"/>
+            <circle cx="31" cy="33" r="2" fill="#F27507"/>
+            <rect x="17" y="29" width="4" height="1.5" rx="0.75" fill="#F27507"/>
+            <rect x="16.25" y="27.5" width="1.5" height="4" rx="0.75" fill="#F27507"/>
+          </svg>
+        </span>
+        <div class="feature-title">Estética retro PS2</div>
+        <p class="feature-desc">3D low-poly con texturas hechas a mano. Inspirado en DOOM y los juegos de PlayStation 2. Una época dorada.</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <span class="placeholder-icon">
+          <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="56" height="56" rx="4" fill="rgba(242,117,7,0.1)"/>
+            <!-- Map pin icon -->
+            <path d="M28 10 C22 10 16 15 16 22 C16 32 28 46 28 46 C28 46 40 32 40 22 C40 15 34 10 28 10Z" fill="none" stroke="#F27507" stroke-width="2"/>
+            <circle cx="28" cy="22" r="5" fill="none" stroke="#F27507" stroke-width="2"/>
+            <circle cx="28" cy="22" r="2" fill="#F27507"/>
+          </svg>
+        </span>
+        <div class="feature-title">Mundo español</div>
+        <p class="feature-desc">La casa del protagonista, el rellano, el barrio, el metro… Un recorrido caótico por una ciudad española en llamas (de gambas).</p>
+      </div>
+
+      <div class="feature-card reveal">
+        <span class="placeholder-icon">
+          <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="56" height="56" rx="4" fill="rgba(242,117,7,0.1)"/>
+            <!-- Skull / boss icon -->
+            <path d="M28 10 C19 10 13 17 13 25 C13 31 16 36 22 38 L22 44 L34 44 L34 38 C40 36 43 31 43 25 C43 17 37 10 28 10Z" fill="none" stroke="#F27507" stroke-width="2"/>
+            <circle cx="23" cy="26" r="3" fill="#F27507"/>
+            <circle cx="33" cy="26" r="3" fill="#F27507"/>
+            <line x1="24" y1="44" x2="24" y2="38" stroke="#F27507" stroke-width="1.5"/>
+            <line x1="28" y1="44" x2="28" y2="38" stroke="#F27507" stroke-width="1.5"/>
+            <line x1="32" y1="44" x2="32" y2="38" stroke="#F27507" stroke-width="1.5"/>
+          </svg>
+        </span>
+        <div class="feature-title">Bosses épicos</div>
+        <p class="feature-desc">La vecina infectada con sus gatos-gamba y el cocinero del restaurante asiático. Dos jefes que no olvidarás.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+ 
+<!-- SOBRE NOSOTROS (antes Arsenal) -->
+<section id="arsenal">
+  <div class="container">
+    <div class="section-label reveal">Quiénes somos</div>
+    <div class="section-title reveal">Sobre Nosotros</div>
+
+    <p class="about-intro reveal">
+      Somos <strong>Naser Studios</strong>, un equipo de cuatro estudiantes universitarios. GAMBAZ es nuestro proyecto de desarrollo de videojuegos: un FPS de acción rápida inspirado en los shooters clásicos, con humor absurdo, estética retro PS2 y el apocalipsis gambero más español que existe.
+    </p>
+
+    <div class="about-grid">
+
+      <div class="about-card reveal">
+        <div class="about-card-icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="48" height="48" rx="4" fill="rgba(26,115,57,0.15)"/>
+            <!-- Lightbulb -->
+            <path d="M24 10 C19 10 15 14 15 19 C15 23 17 26 21 28 L21 34 L27 34 L27 28 C31 26 33 23 33 19 C33 14 29 10 24 10Z" fill="none" stroke="#94A60F" stroke-width="2"/>
+            <line x1="21" y1="36" x2="27" y2="36" stroke="#94A60F" stroke-width="2"/>
+            <line x1="22" y1="38" x2="26" y2="38" stroke="#94A60F" stroke-width="2"/>
+            <circle cx="24" cy="19" r="3" fill="rgba(148,166,15,0.3)" stroke="#94A60F" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="about-card-title">Nacido en el aula</div>
+        <p class="about-card-desc"> La idea es simple: Nochevieja, las gambas de la cena mutan y atacan la ciudad. Un niño armado con juguetes y objetos cotidianos modificados deberá sobrevivir y descubrir el origen del Gambalipsis. Absurdo total, narrado con toda la seriedad del mundo.</p>
+      </div>
+
+      <div class="about-card reveal">
+        <div class="about-card-icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="48" height="48" rx="4" fill="rgba(26,115,57,0.15)"/>
+            <!-- Code brackets -->
+            <polyline points="18,16 10,24 18,32" stroke="#94A60F" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <polyline points="30,16 38,24 30,32" stroke="#94A60F" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <line x1="26" y1="13" x2="22" y2="35" stroke="#94A60F" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="about-card-title">Hecho con Unreal Engine</div>
+        <p class="about-card-desc">Todo desarrollado en Unreal Engine 5.6 con Blueprints, con un estilo 3D low-poly que recuerda a los juegos de PS2. Las texturas, algunas hechas a mano y otras creadas mediante fotografías, refuerzan esa estética de época dorada.</p>
+      </div>
+
+      <div class="about-card reveal">
+        <div class="about-card-icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="48" height="48" rx="4" fill="rgba(26,115,57,0.15)"/>
+            <!-- Calendar / deadline -->
+            <rect x="10" y="14" width="28" height="24" rx="3" fill="none" stroke="#94A60F" stroke-width="2"/>
+            <line x1="10" y1="22" x2="38" y2="22" stroke="#94A60F" stroke-width="2"/>
+            <line x1="18" y1="10" x2="18" y2="18" stroke="#94A60F" stroke-width="2" stroke-linecap="round"/>
+            <line x1="30" y1="10" x2="30" y2="18" stroke="#94A60F" stroke-width="2" stroke-linecap="round"/>
+            <rect x="20" y="27" width="8" height="6" rx="1" fill="rgba(148,166,15,0.4)" stroke="#94A60F" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="about-card-title">4 meses de desarrollo</div>
+        <p class="about-card-desc">Desde el concept art hasta la build final, compaginamos el proyecto con el resto de asignaturas. Muchas bebidas energeticas, pocas horas de sueño, y horas y horas de no saber que fallaba esta vez.</p>
+      </div>
+
+      <div class="about-card reveal">
+        <div class="about-card-icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="48" height="48" rx="4" fill="rgba(26,115,57,0.15)"/>
+            <!-- Team/people -->
+            <circle cx="18" cy="20" r="6" fill="none" stroke="#94A60F" stroke-width="2"/>
+            <circle cx="30" cy="20" r="6" fill="none" stroke="#94A60F" stroke-width="2"/>
+            <path d="M8 38 C8 31 13 27 18 27" fill="none" stroke="#94A60F" stroke-width="2" stroke-linecap="round"/>
+            <path d="M40 38 C40 31 35 27 30 27" fill="none" stroke="#94A60F" stroke-width="2" stroke-linecap="round"/>
+            <path d="M18 27 C21 27 27 27 30 27" fill="none" stroke="#94A60F" stroke-width="2"/>
+            <path d="M18 38 C18 33 30 33 30 38" fill="none" stroke="#94A60F" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="about-card-title">Equipo multidisciplinar</div>
+        <p class="about-card-desc">Programación, arte 3D, diseño de niveles y producción. Cada miembro del equipo aportó su especialidad para crear algo mayor que la suma de sus partes.</p>
+      </div>
+
+    </div>
+
+    <div class="about-quote reveal">
+      "El objetivo es crear un juego divertido, rápido y absurdo, inspirado en los shooters clásicos pero con un toque humorístico."
+      <span>— Naser Studios</span>
+    </div>
+
+  </div>
+</section>
+ 
+<!-- EQUIPO -->
+<section id="equipo">
+  <div class="container">
+    <div class="section-label reveal">Desarrolladores</div>
+    <div class="section-title reveal">El Equipo</div>
+    <div class="team-grid">
+
+      <div class="team-card reveal">
+        <div class="team-avatar">
+            <img src="assets/maria.png" alt="María" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" />
+        </div>
+        <div class="team-name">María</div>
+        <div class="team-role">Líder de proyecto y diseño de arte</div>
+      </div>
+
+      <div class="team-card reveal">
+        <div class="team-avatar">
+            <img src="assets/anastasiya.png" alt="Anastasiya" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" />
+        </div>
+        <div class="team-name">Anastasiya</div>
+        <div class="team-role">Diseño y programación de interfaces</div>
+      </div>
+
+      <div class="team-card reveal">
+        <div class="team-avatar">
+            <img src="assets/gonzalo.png" alt="Gonzalo" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" />
+        </div>
+        <div class="team-name">Gonzalo</div>
+        <div class="team-role">Programación e implementación</div>
+      </div>
+
+      <div class="team-card reveal">
+        <div class="team-avatar">
+            <img src="assets/trajano.png" alt="Trajano" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" />
+        </div>
+        <div class="team-name">Trajano</div>
+        <div class="team-role">Modelado y misceláneo</div>
+      </div>
+
+    </div>
+    <p style="text-align:center;margin-top:2rem;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.15em;color:var(--green-light);">NASER STUDIOS™</p>
+  </div>
+</section>
+ 
+<!-- COMENTARIOS -->
+<section id="comentarios">
+  <div class="container">
+    <div class="section-label reveal">Comunidad</div>
+    <div class="section-title reveal">Comentarios</div>
+    <script src="https://utteranc.es/client.js"
+      repo="maria6092/Gambaz"
+      issue-term="pathname"
+      theme="github-dark"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </div>
+</section>
+ 
+<!-- SOCIAL -->
+<section id="social">
+  <div class="container">
+    <div class="section-label reveal">Síguenos</div>
+    <div class="section-title reveal">Redes Sociales</div>
+    <div class="social-cards">
+
+      <a class="social-card reveal" href="https://www.instagram.com/_gambaz_/" target="_blank" rel="noopener">
+        <span class="social-icon">
+          <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="8" width="40" height="40" rx="12" fill="none" stroke="#F27507" stroke-width="2.5"/>
+            <circle cx="28" cy="28" r="9" fill="none" stroke="#F27507" stroke-width="2.5"/>
+            <circle cx="38.5" cy="17.5" r="2.5" fill="#F27507"/>
+          </svg>
+        </span>
+        <div class="social-name">Instagram</div>
+        <div class="social-handle">@_gambaz_</div>
+        <div class="social-cta">Seguir →</div>
+      </a>
+
+      <a class="social-card reveal" href="https://youtu.be/K_7ZtMoNH_o" target="_blank" rel="noopener">
+        <span class="social-icon">
+          <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="14" width="44" height="28" rx="8" fill="none" stroke="#F27507" stroke-width="2.5"/>
+            <polygon points="23,20 23,36 38,28" fill="#F27507"/>
+          </svg>
+        </span>
+        <div class="social-name">YouTube</div>
+        <div class="social-handle">Tráiler oficial</div>
+        <div class="social-cta">Ver vídeo →</div>
+      </a>
+
+      <a class="social-card reveal" href="https://itch.io" target="_blank" rel="noopener">
+        <span class="social-icon">
+          <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Controller -->
+            <rect x="8" y="18" width="40" height="24" rx="10" fill="none" stroke="#F27507" stroke-width="2.5"/>
+            <circle cx="38" cy="28" r="2.5" fill="#F27507"/>
+            <circle cx="43" cy="33" r="2.5" fill="#F27507"/>
+            <circle cx="38" cy="38" r="2.5" fill="#F27507"/>
+            <circle cx="33" cy="33" r="2.5" fill="#F27507"/>
+            <rect x="16" y="29" width="5" height="2" rx="1" fill="#F27507"/>
+            <rect x="17.5" y="27.5" width="2" height="5" rx="1" fill="#F27507"/>
+          </svg>
+        </span>
+        <div class="social-name">itch.io</div>
+        <div class="social-handle">Próximamente</div>
+        <div class="social-cta">Estar al tanto →</div>
+      </a>
+
+    </div>
+  </div>
+</section>
+ 
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">GAMBAZ</span>
+  <div class="footer-studio">Naser Studios™</div>
+  <div class="footer-links">
+    <a href="#trailer">Tráiler</a>
+    <a href="https://www.instagram.com/_gambaz_/" target="_blank">Instagram</a>
+    <a href="#comentarios">Comentarios</a>
+    <a href="#equipo">Equipo</a>
+  </div>
+  <p class="footer-copy">© 2025 Naser Studios. Haz el gamba, no la guerra.</p>
+</footer>
+ 
+<script>
+  // ─── SCROLL REVEAL ───
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => io.observe(el));
+ 
+</script>
+</body>
+</html>
