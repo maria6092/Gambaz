@@ -365,21 +365,7 @@
       opacity: 0.55;
       cursor: default;
     }
-    .feedback-card--soon::after {
-      content: 'PRÓXIMAMENTE';
-      position: absolute;
-      top: 14px;
-      right: -28px;
-      background: var(--green-dark);
-      color: var(--cream);
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      padding: 0.25rem 2.5rem;
-      transform: rotate(45deg);
-      transform-origin: center;
-    }
+
     .feedback-card--active::before {
       content: '';
       position: absolute;
@@ -932,7 +918,20 @@
       <!-- Alpha — ACTIVO -->
       <a href="https://forms.gle/yjhFritnVr2isHUZ8" target="_blank" rel="noopener" class="feedback-card feedback-card--active reveal">
         <div class="feedback-card-phase">Fase 1 · Activo ahora</div>
-        <div class="feedback-card-icon">🎮</div>
+        <div class="feedback-card-icon">
+          <!-- Mando / gamepad -->
+          <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+            <rect width="56" height="56" rx="4" fill="rgba(242,117,7,0.1)"/>
+            <rect x="9" y="18" width="38" height="22" rx="9" fill="none" stroke="#F27507" stroke-width="2"/>
+            <circle cx="35" cy="25" r="2" fill="#F27507"/>
+            <circle cx="40" cy="30" r="2" fill="#F27507"/>
+            <circle cx="35" cy="35" r="2" fill="#F27507"/>
+            <circle cx="30" cy="30" r="2" fill="#F27507"/>
+            <rect x="15" y="29" width="5" height="2" rx="1" fill="#F27507"/>
+            <rect x="16.5" y="27.5" width="2" height="5" rx="1" fill="#F27507"/>
+            <rect x="24" y="22" width="8" height="3" rx="1.5" fill="rgba(242,117,7,0.4)" stroke="#F27507" stroke-width="1"/>
+          </svg>
+        </div>
         <div class="feedback-card-title">Testeo Alpha</div>
         <p class="feedback-card-desc">
           ¿Has jugado la versión alpha? Cuéntanos tu experiencia completa: controles, dificultad, rendimiento, sensaciones generales y lo que más te ha gustado o menos.
@@ -943,7 +942,30 @@
       <!-- Bugs — PRÓXIMAMENTE -->
       <div class="feedback-card feedback-card--soon reveal">
         <div class="feedback-card-phase">Fase 2 · Testeo final</div>
-        <div class="feedback-card-icon">🐛</div>
+        <div class="feedback-card-icon">
+          <!-- Bicho/bug pixelado -->
+          <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+            <rect width="56" height="56" rx="4" fill="rgba(242,117,7,0.1)"/>
+            <!-- cuerpo -->
+            <ellipse cx="28" cy="32" rx="8" ry="11" fill="none" stroke="#F27507" stroke-width="2"/>
+            <!-- cabeza -->
+            <circle cx="28" cy="19" r="5" fill="none" stroke="#F27507" stroke-width="2"/>
+            <!-- antenas -->
+            <line x1="25" y1="15" x2="21" y2="10" stroke="#F27507" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="31" y1="15" x2="35" y2="10" stroke="#F27507" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="21" cy="10" r="1.5" fill="#F27507"/>
+            <circle cx="35" cy="10" r="1.5" fill="#F27507"/>
+            <!-- patas -->
+            <line x1="20" y1="27" x2="13" y2="24" stroke="#F27507" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="20" y1="32" x2="12" y2="32" stroke="#F27507" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="20" y1="37" x2="13" y2="40" stroke="#F27507" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="36" y1="27" x2="43" y2="24" stroke="#F27507" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="36" y1="32" x2="44" y2="32" stroke="#F27507" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="36" y1="37" x2="43" y2="40" stroke="#F27507" stroke-width="1.5" stroke-linecap="round"/>
+            <!-- línea central cuerpo -->
+            <line x1="28" y1="21" x2="28" y2="43" stroke="#F27507" stroke-width="1" stroke-dasharray="2 2" opacity="0.5"/>
+          </svg>
+        </div>
         <div class="feedback-card-title">Reporte de Bugs</div>
         <p class="feedback-card-desc">
           ¿Encontraste algo raro? Descríbenos el bug, cuándo ocurre, en qué nivel y si puedes reproducirlo. Cada reporte nos ayuda a llegar a la versión final en el mejor estado posible.
@@ -954,7 +976,22 @@
       <!-- Presentación final — PRÓXIMAMENTE -->
       <div class="feedback-card feedback-card--soon reveal">
         <div class="feedback-card-phase">Fase 3 · Versión final</div>
-        <div class="feedback-card-icon">🏆</div>
+        <div class="feedback-card-icon">
+          <!-- Trofeo / copa -->
+          <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+            <rect width="56" height="56" rx="4" fill="rgba(242,117,7,0.1)"/>
+            <!-- copa -->
+            <path d="M18 12 L38 12 L36 28 C36 34 32 38 28 38 C24 38 20 34 20 28 Z" fill="none" stroke="#F27507" stroke-width="2" stroke-linejoin="round"/>
+            <!-- asas -->
+            <path d="M18 14 C14 14 11 17 11 21 C11 25 14 27 18 26" fill="none" stroke="#F27507" stroke-width="2" stroke-linecap="round"/>
+            <path d="M38 14 C42 14 45 17 45 21 C45 25 42 27 38 26" fill="none" stroke="#F27507" stroke-width="2" stroke-linecap="round"/>
+            <!-- pie -->
+            <line x1="28" y1="38" x2="28" y2="44" stroke="#F27507" stroke-width="2" stroke-linecap="round"/>
+            <rect x="20" y="44" width="16" height="3" rx="1.5" fill="#F27507" opacity="0.8"/>
+            <!-- estrella interior -->
+            <polygon points="28,18 29.5,23 34,23 30.5,26 32,31 28,28 24,31 25.5,26 22,23 26.5,23" fill="rgba(242,117,7,0.35)" stroke="#F27507" stroke-width="1" stroke-linejoin="round"/>
+          </svg>
+        </div>
         <div class="feedback-card-title">Valoración Final</div>
         <p class="feedback-card-desc">
           Formulario de presentación definitiva. Una valoración completa del juego acabado: historia, mecánicas, arte, sonido y experiencia global. El veredicto final del Gambalipsis.
